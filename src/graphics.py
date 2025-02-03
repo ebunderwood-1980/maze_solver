@@ -75,4 +75,7 @@ class Cell():
             self.__win.draw_line(left_line)
         if self.has_right_wall:
             self.__win.draw_line(right_line)
+
+    def draw_move(self, to_cell, undo=False):
+        pass
         
