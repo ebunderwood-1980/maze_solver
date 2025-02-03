@@ -56,6 +56,9 @@ class Cell():
         self.__win = window
 
     def draw(self):
+        if self.__win is None:
+            return
+        
         #Calculate remaining points of square.  Top left and bottom right already passed in.
         top_right = Point(self.__bottom_right.x, self.__top_left.y)
         bottom_left = Point(self.__top_left.x, self.__bottom_right.y)
@@ -77,5 +80,17 @@ class Cell():
             self.__win.draw_line(right_line)
 
     def draw_move(self, to_cell, undo=False):
-        pass
-        
+        #Get line color based on undo flag
+        if undo:
+            line_color = 'red'
+        else:
+            line_color = 'light blue'
+
+        #Get middle of current and to cells.
+        current_middle = Point((self.__bottom_right.x + self.__top_left.x)/2, (self.__top_left.y + self.__bottom_right.y)/2)
+        to_middle = Point((to_cell.__bottom_right.x + to_cell.__top_left.x)/2, (to_cell.__top_left.y + to_cell.__bottom_right.y)/2)
+
+        #Draw the line
+        move_line = Line(current_middle, to_middle)
+        self.__win.draw_line(move_line, fill_color=line_color)
+                
