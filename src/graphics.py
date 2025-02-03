@@ -43,4 +43,36 @@ class Line():
                            self.p2.x, 
                            self.p2.y, 
                            fill=color, width=2)
+
+
+class Cell():
+    def __init__(self, p1, p2, window):
+        self.has_left_wall = True
+        self.has_right_wall  = True 
+        self.has_top_wall = True
+        self.has_bottom_wall = True
+        self.__top_left = p1
+        self.__bottom_right = p2
+        self.__win = window
+
+    def draw(self):
+        #Calculate remaining points of square.  Top left and bottom right already passed in.
+        top_right = Point(self.__bottom_right.x, self.__top_left.y)
+        bottom_left = Point(self.__top_left.x, self.__bottom_right.y)
+
+        #Draw lines for the cell
+        top_line = Line(self.__top_left, top_right)
+        bottom_line = Line(bottom_left, self.__bottom_right)
+        left_line = Line(self.__top_left, bottom_left)
+        right_line = Line(top_right, self.__bottom_right)
+
+        #Call draw on each of the lines to draw on window.
+        if self.has_top_wall:
+            self.__win.draw_line(top_line)
+        if self.has_bottom_wall:
+            self.__win.draw_line(bottom_line)
+        if self.has_left_wall:
+            self.__win.draw_line(left_line)
+        if self.has_right_wall:
+            self.__win.draw_line(right_line)
         
