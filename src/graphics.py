@@ -46,51 +46,56 @@ class Line():
 
 
 class Cell():
-    def __init__(self, p1, p2, window):
+    def __init__(self, window=None):
         self.has_left_wall = True
         self.has_right_wall  = True 
         self.has_top_wall = True
         self.has_bottom_wall = True
-        self.__top_left = p1
-        self.__bottom_right = p2
-        self.__win = window
+        self._x1 = None
+        self._y1 = None
+        self._x2 = None
+        self._y1 = None
+        self._win = window
 
-    def draw(self):
-        if self.__win is None:
+    def draw(self, x1, y1, x2, y2):
+        if self._win is None:
             return
         
-        #Calculate remaining points of square.  Top left and bottom right already passed in.
-        top_right = Point(self.__bottom_right.x, self.__top_left.y)
-        bottom_left = Point(self.__top_left.x, self.__bottom_right.y)
-
-        #Draw lines for the cell
-        top_line = Line(self.__top_left, top_right)
-        bottom_line = Line(bottom_left, self.__bottom_right)
-        left_line = Line(self.__top_left, bottom_left)
-        right_line = Line(top_right, self.__bottom_right)
-
+        self._x1 = x1
+        self._y1 = y1
+        self._x2 = x2
+        self._y2 = y2
+        
         #Call draw on each of the lines to draw on window.
         if self.has_top_wall:
-            self.__win.draw_line(top_line)
+            line = Line(Point(x1, y1), Point(x1, y2))
+            self._win.draw_line(line)
         if self.has_bottom_wall:
-            self.__win.draw_line(bottom_line)
+            line = Line(Point(x1, y1), Point(x2, y1))
+            self._win.draw_line(line)
         if self.has_left_wall:
-            self.__win.draw_line(left_line)
+            line = Line(Point(x2, y1), Point(x2, y2))
+            self._win.draw_line(line)
         if self.has_right_wall:
-            self.__win.draw_line(right_line)
+            line = Line(Point(x1, y2), Point(x2, y2))
+            self._win.draw_line(line)
 
     def draw_move(self, to_cell, undo=False):
         #Get line color based on undo flag
         if undo:
             line_color = 'red'
         else:
-            line_color = 'light blue'
+            line_color = 'light green'
 
         #Get middle of current and to cells.
-        current_middle = Point((self.__bottom_right.x + self.__top_left.x)/2, (self.__top_left.y + self.__bottom_right.y)/2)
-        to_middle = Point((to_cell.__bottom_right.x + to_cell.__top_left.x)/2, (to_cell.__top_left.y + to_cell.__bottom_right.y)/2)
+        half_length = abs(self._x2 - self._x1) // 2
+        x_center = half_length + self._x1
+        y_center = half_length + self._y1
 
-        #Draw the line
-        move_line = Line(current_middle, to_middle)
-        self.__win.draw_line(move_line, fill_color=line_color)
+        half_length2 = abs(to_cell._x2 - to_cell._x1) // 2
+        x_center2 = half_length2 + to_cell._x1
+        y_center2 = half_length2 + to_cell._y1
+
+        line = Line(Point(x_center, y_center), Point(x_center2, y_center2))
+        self._win.draw_line(line, fill_color=line_color)
                 
