@@ -11,7 +11,8 @@ class Maze():
         num_cols,
         cell_size_x,
         cell_size_y,
-        win=None,
+        win=None, 
+        seed=None,
     ):
         self._x1 = x1
         self._y1 = y1
@@ -21,6 +22,10 @@ class Maze():
         self._cell_size_y = cell_size_y
         self._win = win
         self._cells = []
+        if seed:
+            self.seed = random.seed(seed)
+        else:
+            self.seed = None
         self._create_cells()
         self._break_entrance_and_exit()
 
@@ -55,5 +60,22 @@ class Maze():
         self._draw_cell(0,0)
         self._cells[self._num_cols - 1][self._num_rows - 1].has_bottom_wall = False
         self._draw_cell(self._num_cols - 1, self._num_rows - 1)
+
+    def _break_walls_r(self, x, y): 
+        self._cells[x][y]._visited = True 
+
+        while True: 
+            need_to_visit = []
+            for row in range(-1,2):
+                for col in range(-1, 2): 
+                    if row > self._num_rows - 1:
+                        break
+                    if  col > self._num_cols - 1:
+                        break 
+
+                    if self._cells[row][col]._visited == False: 
+                        need_to_visit.append(self._cells[row][col])              
+
+        
         
         
